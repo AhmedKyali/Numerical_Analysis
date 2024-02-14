@@ -58,7 +58,7 @@ def solve_equation():
     # Show the initial plot
     plt.draw()
     while True:
-        plt.title(f'Iteration {i}')
+        plt.title(f'Root is {round(x_r,3)} for Iteration {i}')
         #scatter.remove()
 
         if f_x.subs(x, x_l) * f_x.subs(x, x_r) < 0:

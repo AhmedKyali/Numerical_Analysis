@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+
 def iter_com():
     req_iter_entry.configure(state='normal')
     req_Error_entry.delete('0', END)

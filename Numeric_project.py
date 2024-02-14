@@ -1,4 +1,3 @@
-import itertools
 import random
 import tkinter as tk
 from tkinter import messagebox, ttk
@@ -7,7 +6,6 @@ from sympy import symbols, expand
 from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import pandas as pd
 import numpy as np
 def iter_com():
     req_iter_entry.configure(state='normal')
@@ -142,10 +140,17 @@ solve_button = CTkButton(master=root, text="Solve", command=solve_equation, corn
                          hover_color="#5c5b5b", border_color='#ffffff', border_width=2)
 solve_button.pack()
 
+
+
 # Output Text widget
-frame_t_f = CTkFrame(root)
+frame_t_f = CTkScrollableFrame(root)
+tabview = CTkTabview(master=frame_t_f)
+tabview.pack(fill='both', expand=True)
+tabview.add('Table')
+tabview.add('Chart')
 frame_t_f.pack(fill='both', expand=True)
-table = ttk.Treeview(frame_t_f, columns=('i', 'x_l', 'F(x_l)', 'x_u', 'F(x_u)', 'x_r', 'F(x_r)', 'ε_a'), show='headings', selectmode="extended")
+table = ttk.Treeview(tabview.tab('Table'), columns=('i', 'x_l', 'F(x_l)', 'x_u', 'F(x_u)', 'x_r', 'F(x_r)', 'ε_a'),
+                     show='headings', selectmode="extended")
 table.heading('i', text='i')
 table.column("i", minwidth=0, width=80)
 table.heading('x_l', text='x_l')
@@ -168,7 +173,7 @@ table.pack(side='left', fill='both', expand=True)
 fig, ax = plt.subplots()
 plt.xlabel('X')
 plt.ylabel('Y')
-canvas = FigureCanvasTkAgg(fig, master=frame_t_f)
+canvas = FigureCanvasTkAgg(fig, master=tabview.tab('Chart'))
 canvas.get_tk_widget().pack(side='right', fill='both', expand=True)
 # Plot the initial points
 

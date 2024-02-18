@@ -107,7 +107,6 @@ def solve_equation():
 # Create the main window
 root = CTk()
 root.title("Root Finder")
-
 # Labels and Entry fields
 frame6 = CTkFrame(root)
 frame6.pack(fill='x')

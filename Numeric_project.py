@@ -8,6 +8,11 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 
+Choice = ""
+def Choose_method(choice):
+    global Choice
+    Choice = choice
+    print(Choice)
 def iter_com():
     req_iter_entry.configure(state='normal')
     button1.configure(hover_color='#ededed', fg_color='#5c5b5b')
@@ -29,10 +34,12 @@ def solve_equation():
     x_u = x_u_i = round(float(x_u_entry.get()), 3)
 
     x = symbols('x')
-    f_x = (fx_entry.get()).replace('^', '**').strip()
+    f_x = (fx_entry.get()).replace('^', '**').replace('x','*x').strip()
+    if f_x[0]=='*':
+        f_x=f_x[1:]
     for i in range(len(f_x)):
-        if f_x[i] == 'x' and ('0' <= f_x[i - 1] <= '9') and i != 0:
-            f_x = f_x[0:i] + '*x' + f_x[i+1:]
+        if i > 1 and f_x[i] == 'x' and (f_x[i - 2]=='+' or f_x[i - 2]=='-'):
+            f_x = f_x[0:i-1] + 'x' + f_x[i+1:]
 
     f_x = expand(f_x)
     f_x.subs(x, x_l)
@@ -48,7 +55,7 @@ def solve_equation():
     xx = np.linspace(x_l_i, x_u_i, 120)
     plt.plot(xx, [f_x.subs(x, i) for i in xx])
     table.insert(parent='', index=0, values=(0, round(x_l, 3), round(f_x.subs(x, x_l), 3), round(x_u, 3), round(f_x.subs(x, x_u), 3),
-                                             round(x_r, 3), round(f_x.subs(x, x_r), 3), None))
+                                             round(x_r, 3), round(f_x.subs(x, x_r), 3), None), tags='even')
     colors = np.array(
         ["red", "green", "blue", "yellow", "pink", "black", "orange", "purple", "beige", "brown", "gray", "cyan",
          "magenta"])
@@ -69,19 +76,27 @@ def solve_equation():
             break
 
         x_r_old = x_r
-        x_r = (x_l + x_u) / 2
+
+        if Choice == 'Bisection':
+            x_r = (x_l + x_u) / 2
+        elif Choice == 'False position':
+            x_r = x_u - ((f_x.subs(x, x_u) * (x_l - x_u))/(f_x.subs(x, x_l) - f_x.subs(x, x_u)))
+        else:
+            messagebox.showerror("Error", "No Method are chosen. Please try again.")
+            return
+
 
         cur_Error = abs((x_r - x_r_old) / x_r * 100)
         table.insert(parent='', index=i,
                      values=(i, round(x_l, 3), round(f_x.subs(x, x_l), 3), round(x_u, 3), round(f_x.subs(x, x_u), 3),
-                             round(x_r, 3), round(f_x.subs(x, x_r), 3), round(cur_Error, 3)))
+                             round(x_r, 3), round(f_x.subs(x, x_r), 3), round(cur_Error, 3)), tags='even' if i % 2 == 0 else 'odd')
         #plt.cla()
         color = random.randint(0, 12)
         scatter = plt.scatter(x_l, f_x.subs(x, x_l), color=colors[color], zorder=2)
         scatter = plt.scatter(x_u, f_x.subs(x, x_u), color=colors[color], zorder=2)
         # Show the initial plot
         plt.draw()
-        if cur_Error <= req_Error or i >= req_iter:
+        if cur_Error <= req_Error or i+1 >= req_iter:
             break
 
         i += 1
@@ -94,6 +109,10 @@ root = CTk()
 root.title("Root Finder")
 
 # Labels and Entry fields
+frame6 = CTkFrame(root)
+frame6.pack(fill='x')
+method_CoB = CTkComboBox(master=frame6, values=['Bisection', 'False position'],command=Choose_method).pack(side='right', ipadx=22, pady=5)
+CTkLabel(frame6, text="Choose a method", anchor='w').pack(side='left')
 
 frame2 = CTkFrame(root)
 frame2.pack(fill='x')
@@ -123,8 +142,8 @@ CTkLabel(frame1, text="Requested Error Percentage:", anchor='w').pack(side='left
 req_Error_entry = CTkEntry(frame1, placeholder_text="EX: 10...", state='disabled')
 req_Error_entry.pack(side='right', ipadx=22, pady=5)
 
-image_file = ImageTk.PhotoImage(Image.open("img.png").resize((20, 20), Image.Resampling.LANCZOS))
-image_file2 = ImageTk.PhotoImage(Image.open("img2.png").resize((20, 20), Image.Resampling.LANCZOS))
+image_file = CTkImage(Image.open("img.png").resize((20, 20), Image.Resampling.LANCZOS))
+image_file2 = CTkImage(Image.open("img2.png").resize((20, 20), Image.Resampling.LANCZOS))
 # Create the first button and pack it to the left in frame_last
 button1 = CTkButton(frame_last, image=image_file2, text="", command=error_com, corner_radius=35, border_color='#ffffff',
                     border_width=2, width=20, hover_color='#ededed', fg_color='#5c5b5b')
@@ -175,6 +194,8 @@ table.heading('F(x_r)', text='F(x_r)')
 table.column("F(x_r)", minwidth=0, width=80)
 table.heading('ε_a', text='ε_a')
 table.column("ε_a", minwidth=0, width=80)
+table.tag_configure('even', background='#4f4e4e')
+table.tag_configure('odd', background='#858585')
 table.pack(side='left', fill='both', expand=True)
 
 

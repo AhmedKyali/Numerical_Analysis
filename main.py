@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from customtkinter import *
 from PIL import Image, ImageTk
-from Numeric_project import ch_1
+from Chapter_1 import ch_1
 
 
 menu = CTk()

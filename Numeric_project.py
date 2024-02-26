@@ -7,6 +7,22 @@ from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+import re
+
+def transform_expression(expression):
+
+    terms = re.split(r'([-+*/])', expression)
+    transformed_terms = []
+
+    for term in terms:
+        if 'x' in term:
+            if term.startswith('x'):
+                term = '1' + term  # add coefficient 1 if none exists
+            term = term.replace('x', '*x')
+            term = term.replace('^', '**')
+        transformed_terms.append(term)
+
+    return ''.join(transformed_terms)
 
 Choice = ""
 def Choose_method(choice):
@@ -34,13 +50,8 @@ def solve_equation():
     x_u = x_u_i = round(float(x_u_entry.get()), 3)
 
     x = symbols('x')
-    f_x = (fx_entry.get()).replace('^', '**').replace('x','*x').strip()
-    if f_x[0]=='*':
-        f_x=f_x[1:]
-    for i in range(len(f_x)):
-        if i > 1 and f_x[i] == 'x' and (f_x[i - 2]=='+' or f_x[i - 2]=='-'):
-            f_x = f_x[0:i-1] + 'x' + f_x[i+1:]
-
+    f_x = (fx_entry.get())
+    f_x = transform_expression(f_x)
     f_x = expand(f_x)
     f_x.subs(x, x_l)
 
@@ -49,13 +60,14 @@ def solve_equation():
         return
 
     cur_Error = 100
-    i = 1
+    i = 0
     x_r = (x_l + x_u) / 2
-
+    plt.title(f'Root is {round(x_r, 3)} for Iteration {i + 1}')
     xx = np.linspace(x_l_i, x_u_i, 120)
     plt.plot(xx, [f_x.subs(x, i) for i in xx])
     table.insert(parent='', index=0, values=(0, round(x_l, 3), round(f_x.subs(x, x_l), 3), round(x_u, 3), round(f_x.subs(x, x_u), 3),
                                              round(x_r, 3), round(f_x.subs(x, x_r), 3), None), tags='even')
+    i+=1
     colors = np.array(
         ["red", "green", "blue", "yellow", "pink", "black", "orange", "purple", "beige", "brown", "gray", "cyan",
          "magenta"])
@@ -64,8 +76,8 @@ def solve_equation():
     scatter = plt.scatter(x_u, f_x.subs(x, x_u), color=colors[color], zorder=2)
     # Show the initial plot
     plt.draw()
-    while True:
-        plt.title(f'Root is {round(x_r,3)} for Iteration {i}')
+    while cur_Error > req_Error and i < req_iter:
+        plt.title(f'Root is {round(x_r,3)} for Iteration {i+1}')
         #scatter.remove()
 
         if f_x.subs(x, x_l) * f_x.subs(x, x_r) < 0:
@@ -87,6 +99,7 @@ def solve_equation():
 
 
         cur_Error = abs((x_r - x_r_old) / x_r * 100)
+
         table.insert(parent='', index=i,
                      values=(i, round(x_l, 3), round(f_x.subs(x, x_l), 3), round(x_u, 3), round(f_x.subs(x, x_u), 3),
                              round(x_r, 3), round(f_x.subs(x, x_r), 3), round(cur_Error, 3)), tags='even' if i % 2 == 0 else 'odd')
@@ -96,10 +109,8 @@ def solve_equation():
         scatter = plt.scatter(x_u, f_x.subs(x, x_u), color=colors[color], zorder=2)
         # Show the initial plot
         plt.draw()
-        if cur_Error <= req_Error or i+1 >= req_iter:
-            break
-
         i += 1
+
 
     table.insert(parent='', index=0, values=('---', '---', '---', '---', '---', '---', '---', '---'))
 

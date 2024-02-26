@@ -13,7 +13,6 @@ def transform_expression(expression):
 
     terms = re.split(r'([-+*/])', expression)
     transformed_terms = []
-
     for term in terms:
         if 'x' in term:
             if term.startswith('x'):

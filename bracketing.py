@@ -8,21 +8,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import re
-def ch_1():
-    def transform_expression(expression):
-
-        terms = re.split(r'([-+*/])', expression)
-        transformed_terms = []
-        for term in terms:
-            if 'x' in term:
-                if term.startswith('x'):
-                    term = '1' + term  # add coefficient 1 if none exists
-                term = term.replace('x', '*x')
-                term = term.replace('^', '**')
-            transformed_terms.append(term)
-
-        return ''.join(transformed_terms)
-
+from utils import transform_expression
+def bracket():
     def Choose_method(choice):
         global Choice
         Choice = choice
@@ -116,32 +103,38 @@ def ch_1():
     # Create the main window
     root = CTk()
     root.title("Root Finder")
+
+    tabviewM = CTkTabview(master=root)
+    tabviewM.add('Bisection & False position')
+    tabviewM.add('initial')
+    tabviewM.pack(fill='both', expand=True)
     # Labels and Entry fields
-    frame6 = CTkFrame(root)
+    frame6 = CTkFrame(tabviewM.tab('Bisection & False position'))
     frame6.pack(fill='x')
-    method_CoB = CTkComboBox(master=frame6, values=['Empty','Bisection', 'False position'],command=Choose_method).pack(side='right', ipadx=22, pady=5)
+    method_CoB = (CTkComboBox(master=frame6, values=['Empty', 'Bisection', 'False position'], command=Choose_method).
+                  pack(side='right', ipadx=22, pady=5))
     CTkLabel(frame6, text="Choose a method", anchor='w').pack(side='left')
 
-    frame2 = CTkFrame(root)
+    frame2 = CTkFrame(tabviewM.tab('Bisection & False position'))
     frame2.pack(fill='x')
     CTkLabel(frame2, text="Lower Value (x_l):", anchor='w').pack(side='left')
     x_l_entry = CTkEntry(frame2, placeholder_text="EX: 0...")
     x_l_entry.pack(side='right', ipadx=22, pady=5)
 
-    frame3 = CTkFrame(root)
+    frame3 = CTkFrame(tabviewM.tab('Bisection & False position'))
     frame3.pack(fill='x')
     CTkLabel(frame3, text="Upper Value (x_u):", anchor='w').pack(side='left')
     x_u_entry = CTkEntry(frame3, placeholder_text="EX: 1...")
     x_u_entry.pack(side='right', ipadx=22, pady=5)
 
-    frame4 = CTkFrame(root)
+    frame4 = CTkFrame(tabviewM.tab('Bisection & False position'))
     frame4.pack(fill='x')
     CTkLabel(frame4, text="F(x):", anchor='w').pack(side='left')
     fx_entry = CTkEntry(frame4, placeholder_text="EX: 2x^3-4x+5...")
     fx_entry.pack(side='right', ipadx=22, pady=5)
 
     # Create a new frame for the last two label-entry pairs and the buttons
-    frame_last = CTkFrame(root)
+    frame_last = CTkFrame(tabviewM.tab('Bisection & False position'))
     frame_last.pack(fill='x')
 
     frame1 = CTkFrame(frame_last)
@@ -150,8 +143,6 @@ def ch_1():
     req_Error_entry = CTkEntry(frame1, placeholder_text="EX: 10...", state='disabled')
     req_Error_entry.pack(side='right', ipadx=22, pady=5)
 
-    #image_file = CTkImage(Image.open("img.png").resize((20, 20), Image.Resampling.LANCZOS))
-    #image_file2 = CTkImage(Image.open("img2.png").resize((20, 20), Image.Resampling.LANCZOS))
     # Create the first button and pack it to the left in frame_last
     button1 = CTkButton(frame_last,  text="By Error", command=error_com, corner_radius=35, border_color='#ffffff',
                         border_width=2, width=20, hover_color='#ededed', fg_color='#5c5b5b')
@@ -170,14 +161,14 @@ def ch_1():
 
 
     # Button to solve equation
-    solve_button = CTkButton(master=root, text="Solve", command=solve_equation, corner_radius=35, fg_color="transparent",
+    solve_button = CTkButton(master=tabviewM.tab('Bisection & False position'), text="Solve", command=solve_equation, corner_radius=35, fg_color="transparent",
                              hover_color="#5c5b5b", border_color='#ffffff', border_width=2)
     solve_button.pack(pady=10)
 
 
 
     # Output Text widget
-    frame_t_f = CTkScrollableFrame(root)
+    frame_t_f = CTkScrollableFrame(tabviewM.tab('Bisection & False position'))
     frame_t_f.pack(fill='both', expand=True)
     tabview = CTkTabview(master=frame_t_f)
     tabview.pack(fill='both', expand=True)
@@ -206,14 +197,11 @@ def ch_1():
     table.tag_configure('odd', background='#858585')
     table.pack(side='left', fill='both', expand=True)
 
-
     fig, ax = plt.subplots()
     plt.xlabel('X')
     plt.ylabel('Y')
     canvas = FigureCanvasTkAgg(fig, master=tabview.tab('Chart'))
     canvas.get_tk_widget().pack(side='right', fill='both', expand=True)
     # Plot the initial points
-
-
 
     root.mainloop()

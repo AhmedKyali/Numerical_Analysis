@@ -2,7 +2,11 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from customtkinter import *
 from PIL import Image, ImageTk
-from Chapter_1 import ch_1
+from bracketing import bracket
+from Newton import newton_method
+from Secant import Secant_method
+import re
+from utils import transform_expression
 
 
 menu = CTk()
@@ -16,12 +20,16 @@ Main_menu.pack(fill='both', expand=True)
 
 frame2 = CTkFrame(menu)
 frame2.pack(fill='both', expand=True)
-button1 = CTkButton(frame2, text="Chapter 1", corner_radius=35, command=ch_1, border_color='#ffffff',
+button1 = CTkButton(frame2, text="Bracketing Methods", corner_radius=35, command=bracket, border_color='#ffffff',
                     border_width=2, hover_color='#ededed', fg_color='#5c5b5b')
 button1.pack(side='left', padx=10)
 
-button2 = CTkButton(frame2, text="Chapter 2", corner_radius=35, border_color='#ffffff',
-                    border_width=2, hover_color='#ededed', fg_color='#5c5b5b')
+button2 = CTkButton(frame2, text="Newton Method", corner_radius=35, border_color='#ffffff',
+                    border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=newton_method)
 button2.pack(side='right', padx=10)
+
+button3 = CTkButton(frame2, text="Secant Method", corner_radius=35, border_color='#ffffff',
+                    border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=Secant_method)
+button3.pack(side='right', padx=10)
 
 menu.mainloop()

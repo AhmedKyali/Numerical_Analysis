@@ -10,7 +10,7 @@ import numpy as np
 import re
 from utils import transform_expression
 
-def newton_method():
+def Simple_fixed_method():
     def iter_com():
         req_iter_entry.configure(state='normal')
         button1.configure(hover_color='#ededed', fg_color='#5c5b5b')
@@ -30,29 +30,22 @@ def newton_method():
         iter = 0
         error = 100
         req_iter = round(float(req_iter_entry.get() if req_iter_entry.get() != '' else '10000'), 3)
-        x_i = x_i_old = float(x_i_entry.get())
+        x_i = float(x_i_entry.get())
         eps = round(float(req_Error_entry.get() if req_Error_entry.get() != '' else '0'), 3)
         x = symbols('x')
         f_x = (fx_entry.get())
         f_x = transform_expression(f_x)
         f_x = expand(f_x)
-        function = sympify(f_x)
-        fd_x = diff(function, x)
-        fd_x = expand(fd_x)
-
         while True:
             table.insert(parent='', index=iter,
-                         values=(iter, round(x_i, 3), round(float(f_x.subs(x, x_i)), 3),
-                                 round(float(fd_x.subs(x, x_i)), 3)
+                         values=(iter, round(x_i, 3), round(float(f_x.subs(x, x_i)), 3)
                                  , None if error == 100 else round(error, 3)), tags='even' if iter % 2 == 0 else 'odd')
 
-            scatter = plt.scatter(x_i, f_x.subs(x, x_i), color='red', zorder=2)
-            scatter = plt.scatter(x_i, fd_x.subs(x, x_i), color='blue', zorder=2)
+            scatter = plt.scatter(x_i, f_x.subs(x, x_i), zorder=2)
             plt.draw()
 
-            x_iPlus1 = x_i - (round(f_x.subs(x, x_i), 3)/round(fd_x.subs(x, x_i), 3))
+            x_iPlus1 = f_x.subs(x, x_i)
             error = abs(x_iPlus1-x_i)/x_iPlus1*100
-
             x_i = x_iPlus1
 
             if flag == True or req_iter <= iter:
@@ -66,6 +59,7 @@ def newton_method():
 
     root = CTk()
     root.title("Root Finder")
+
     frame3 = CTkFrame(root)
     frame3.pack(fill='x')
     CTkLabel(frame3, text="Initial Value (x_o):", anchor='w').pack(side='left')
@@ -114,16 +108,14 @@ def newton_method():
     tabview.add('Table')
     tabview.add('Chart')
 
-    table = ttk.Treeview(tabview.tab('Table'), columns=('i', 'x_i', 'F(x_i)', 'Fd(x_i)', 'ε_a'),
+    table = ttk.Treeview(tabview.tab('Table'), columns=('i', 'x_i', 'x_i+1', 'ε_a'),
                      show='headings', selectmode="extended")
     table.heading('i', text='i')
     table.column("i", minwidth=0, width=80)
     table.heading('x_i', text='x_i')
     table.column("x_i", minwidth=0, width=80)
-    table.heading('F(x_i)', text='F(x_i)')
-    table.column("F(x_i)", minwidth=0, width=80)
-    table.heading('Fd(x_i)', text='Fd(x_i)')
-    table.column("Fd(x_i)", minwidth=0, width=80)
+    table.heading('x_i+1', text='x_i+1')
+    table.column("x_i+1", minwidth=0, width=80)
     table.heading('ε_a', text='ε_a')
     table.column("ε_a", minwidth=0, width=80)
     table.tag_configure('even', background='#4f4e4e')
@@ -137,3 +129,4 @@ def newton_method():
     canvas.get_tk_widget().pack(side='bottom', fill='both', expand=True)
 
     root.mainloop()
+Simple_fixed_method()

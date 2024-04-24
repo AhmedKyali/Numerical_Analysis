@@ -30,13 +30,15 @@ def Simple_fixed_method():
         iter = 0
         error = 100
         req_iter = round(float(req_iter_entry.get() if req_iter_entry.get() != '' else '10000'), 3)
-        x_i = float(x_i_entry.get())
+        x_i = x_i_min = x_i_max = float(x_i_entry.get())
         eps = round(float(req_Error_entry.get() if req_Error_entry.get() != '' else '0'), 3)
         x = symbols('x')
         f_x = (fx_entry.get())
         f_x = transform_expression(f_x)
         f_x = expand(f_x)
         while True:
+            x_i_max = max(x_i, x_i_max)
+            x_i_min = min(x_i, x_i_min)
             table.insert(parent='', index=iter,
                          values=(iter, round(x_i, 3), round(float(f_x.subs(x, x_i)), 3)
                                  , None if error == 100 else round(error, 3)), tags='even' if iter % 2 == 0 else 'odd')
@@ -53,9 +55,8 @@ def Simple_fixed_method():
             iter += 1
             if eps >= error:
                 flag = True
-        # xx = np.linspace(min(x_i_old, x_iPlus1), max(x_iPlus1, x_i_old), 120)
-        # plt.plot(xx, [f_x.subs(x, i) for i in xx])
-        # plt.plot(xx, [fd_x.subs(x, i) for i in xx])
+        xx = np.linspace(float(x_i_min), float(x_i_max), 120)
+        plt.plot(xx, [f_x.subs(x, i) for i in xx])
 
     root = CTk()
     root.title("Root Finder")
@@ -129,4 +130,3 @@ def Simple_fixed_method():
     canvas.get_tk_widget().pack(side='bottom', fill='both', expand=True)
 
     root.mainloop()
-Simple_fixed_method()

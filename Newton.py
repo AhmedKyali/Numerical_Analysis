@@ -1,3 +1,4 @@
+import numpy
 from customtkinter import *
 import random
 import tkinter as tk
@@ -30,7 +31,7 @@ def newton_method():
         iter = 0
         error = 100
         req_iter = round(float(req_iter_entry.get() if req_iter_entry.get() != '' else '10000'), 3)
-        x_i = x_i_old = float(x_i_entry.get())
+        x_i = x_i_min = x_i_max = float(x_i_entry.get())
         eps = round(float(req_Error_entry.get() if req_Error_entry.get() != '' else '0'), 3)
         x = symbols('x')
         f_x = (fx_entry.get())
@@ -41,28 +42,40 @@ def newton_method():
         fd_x = expand(fd_x)
 
         while True:
+            x_i_max = max(x_i, x_i_max)
+            x_i_min = min(x_i, x_i_min)
+            x_i = round(x_i, 3)
+            error = round(error, 3)
+            if error - int(error) == 0:
+                error = int(error)
             table.insert(parent='', index=iter,
-                         values=(iter, round(x_i, 3), round(float(f_x.subs(x, x_i)), 3),
+                         values=(iter, x_i, round(float(f_x.subs(x, x_i)), 3),
                                  round(float(fd_x.subs(x, x_i)), 3)
-                                 , None if error == 100 else round(error, 3)), tags='even' if iter % 2 == 0 else 'odd')
+                                 , None if error == 100 else error), tags='even' if iter % 2 == 0 else 'odd')
 
-            scatter = plt.scatter(x_i, f_x.subs(x, x_i), color='red', zorder=2)
-            scatter = plt.scatter(x_i, fd_x.subs(x, x_i), color='blue', zorder=2)
+
+
             plt.draw()
 
             x_iPlus1 = x_i - (round(f_x.subs(x, x_i), 3)/round(fd_x.subs(x, x_i), 3))
             error = abs(x_iPlus1-x_i)/x_iPlus1*100
 
-            x_i = x_iPlus1
-
+            scatter = plt.scatter(x_i, f_x.subs(x, x_i), color='red', zorder=2)
+            scatter = plt.scatter(x_i, fd_x.subs(x, x_i), color='blue', zorder=2)
+            scatter = plt.scatter(x_iPlus1, f_x.subs(x, x_iPlus1), color='red', zorder=2)
+            scatter = plt.scatter(x_iPlus1, fd_x.subs(x, x_iPlus1), color='blue', zorder=2)
             if flag == True or req_iter <= iter:
                 break
             iter += 1
             if eps >= error:
                 flag = True
-        # xx = np.linspace(min(x_i_old, x_iPlus1), max(x_iPlus1, x_i_old), 120)
-        # plt.plot(xx, [f_x.subs(x, i) for i in xx])
-        # plt.plot(xx, [fd_x.subs(x, i) for i in xx])
+            x_i = x_iPlus1
+        # scatter = plt.scatter(x_i, f_x.subs(x, x_i), color='red', zorder=2)
+        # scatter = plt.scatter(x_i, fd_x.subs(x, x_i), color='blue', zorder=2)
+        print(floor(x_i_min), " ", ceiling(x_i_max))
+        xx = np.linspace(float(x_i_min), float(x_i_max), 120)
+        plt.plot(xx, [f_x.subs(x, i) for i in xx])
+        plt.plot(xx, [fd_x.subs(x, i) for i in xx])
 
     root = CTk()
     root.title("Root Finder")

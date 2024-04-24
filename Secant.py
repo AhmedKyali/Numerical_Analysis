@@ -38,7 +38,13 @@ def Secant_method():
         f_x = transform_expression(f_x)
         f_x = expand(f_x)
         scatter = plt.scatter(x_i_minus, f_x.subs(x, x_i_minus), zorder=2)
+        x_i_max = max(x_i, x_i_minus)
+        x_i_min = min(x_i, x_i_minus)
         while True:
+            x_i_max = max(x_i, x_i_max)
+            x_i_min = min(x_i, x_i_min)
+            x_i_max = max(x_i_minus, x_i_max)
+            x_i_min = min(x_i_minus, x_i_min)
             table.insert(parent='', index=iter,
                          values=(iter, round(x_i_minus, 3), round(float(f_x.subs(x, x_i_minus)), 3),
                                  round(x_i, 3), round(float(f_x.subs(x, x_i)), 3)
@@ -58,9 +64,8 @@ def Secant_method():
             iter += 1
             if eps >= error:
                 flag = True
-        # xx = np.linspace(min(x_i_old, x_iPlus1), max(x_iPlus1, x_i_old), 120)
-        # plt.plot(xx, [f_x.subs(x, i) for i in xx])
-        # plt.plot(xx, [fd_x.subs(x, i) for i in xx])
+        xx = np.linspace(float(x_i_min), float(x_i_max), 120)
+        plt.plot(xx, [f_x.subs(x, i) for i in xx])
 
     root = CTk()
     root.title("Root Finder")

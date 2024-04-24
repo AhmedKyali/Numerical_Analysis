@@ -8,7 +8,8 @@ def transform_expression(expression):
         if 'x' in term:
             if term.startswith('x'):
                 term = '1' + term  # add coefficient 1 if none exists
-            term = term.replace('x', '*x')
+            if not term.startswith('('):
+                term = term.replace('x', '*x')
             term = term.replace('^', '**')
         transformed_terms.append(term)
 

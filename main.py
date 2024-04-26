@@ -6,7 +6,7 @@ from Secant import Secant_method
 from Simple_fixed import Simple_fixed_method
 from Gaussian_Elimination import Gauss_e
 from Gaussian_Jordan_Elimination import Gauss_j_e
-
+from LU_Decomp import LU_Decomp
 
 menu = CTk()
 menu.title("Main Menu")
@@ -35,12 +35,16 @@ button4 = CTkButton(frame2, text="Simple Fixed point", corner_radius=35, border_
                     border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=Simple_fixed_method)
 button4.pack(side='top', fill='x')
 
-button5 = CTkButton(frame2, text="Gaussian Elimination(Partial Pivoting)", corner_radius=35, border_color='#ffffff',
+button5 = CTkButton(frame2, text="Gaussian Elimination", corner_radius=35, border_color='#ffffff',
                     border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=Gauss_e)
 button5.pack(side='top', fill='x')
 
-button5 = CTkButton(frame2, text="Gaussian Jordan Elimination(Partial Pivoting)", corner_radius=35, border_color='#ffffff',
+button6 = CTkButton(frame2, text="Gaussian Jordan Elimination", corner_radius=35, border_color='#ffffff',
                     border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=Gauss_j_e)
-button5.pack(side='top', fill='x')
+button6.pack(side='top', fill='x')
+
+button7 = CTkButton(frame2, text="LU Decomposition", corner_radius=35, border_color='#ffffff',
+                    border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=LU_Decomp)
+button7.pack(side='top', fill='x')
 
 menu.mainloop()

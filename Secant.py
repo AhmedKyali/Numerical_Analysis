@@ -1,13 +1,9 @@
 from customtkinter import *
-import random
-import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import ttk
 from sympy import *
-from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-import re
 from utils import transform_expression
 
 def Secant_method():
@@ -68,7 +64,7 @@ def Secant_method():
         plt.plot(xx, [f_x.subs(x, i) for i in xx])
 
     root = CTk()
-    root.title("Root Finder")
+    root.title("Secant Method")
     frame2 = CTkFrame(root)
     frame2.pack(fill='x')
     CTkLabel(frame2, text="Minus one Value (x_i-1):", anchor='w').pack(side='left')

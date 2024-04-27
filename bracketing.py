@@ -1,13 +1,10 @@
 from customtkinter import *
 import random
-import tkinter as tk
 from tkinter import messagebox, ttk
 from sympy import symbols, expand
-from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-import re
 from utils import transform_expression
 def bracket():
     def Choose_method(choice):
@@ -102,7 +99,7 @@ def bracket():
 
     # Create the main window
     root = CTk()
-    root.title("Root Finder")
+    root.title("Bracketing Methods")
 
     # Labels and Entry fields
     frame6 = CTkFrame(root)

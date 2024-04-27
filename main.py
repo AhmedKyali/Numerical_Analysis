@@ -1,4 +1,3 @@
-import tkinter as tk
 from customtkinter import *
 from bracketing import bracket
 from Newton import newton_method
@@ -7,6 +6,7 @@ from Simple_fixed import Simple_fixed_method
 from Gaussian_Elimination import Gauss_e
 from Gaussian_Jordan_Elimination import Gauss_j_e
 from LU_Decomp import LU_Decomp
+from Cramer import Cramer
 
 menu = CTk()
 menu.title("Main Menu")
@@ -46,5 +46,9 @@ button6.pack(side='top', fill='x')
 button7 = CTkButton(frame2, text="LU Decomposition", corner_radius=35, border_color='#ffffff',
                     border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=LU_Decomp)
 button7.pack(side='top', fill='x')
+
+button8 = CTkButton(frame2, text="Cramer's Rule", corner_radius=35, border_color='#ffffff',
+                    border_width=2, hover_color='#ededed', fg_color='#5c5b5b', command=Cramer)
+button8.pack(side='top', fill='x')
 
 menu.mainloop()

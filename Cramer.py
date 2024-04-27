@@ -1,15 +1,12 @@
 from customtkinter import *
 import tkinter as tk
 from tkinter import messagebox, ttk
+import numpy as np
 
 
 it = 0
 tag = 'even'
-def Choose_method(choice):
-    global Choice
-    Choice = choice
-    print(Choice)
-def Gauss_e():
+def Cramer():
     it = 0
     tag = 'even'
     row_column_select = CTk()
@@ -17,23 +14,9 @@ def Gauss_e():
     rows = 3
     columns = 4
 
-    def gauss_e():
-        def back_substitution(matrix):
-            n = len(matrix)
-            x = [0] * n  # Initialize solution vector
-
-            # Iterate backwards from the last row
-            for i in range(n - 1, -1, -1):
-                sum = 0
-                for j in range(i + 1, n):
-                    sum += matrix[i][j] * x[j]
-                x[i] = (matrix[i][n] - sum) / matrix[i][i]
-
-            return x
-
-
-        def display_matrix(matrix, title, factor="", it=0, tag='even'):
-            table.insert(parent='', index=it, values=(title, matrix[0], factor), tags=tag)
+    def cramer():
+        def display_matrix(matrix, title, det="", it=0, tag='even'):
+            table.insert(parent='', index=it, values=(title, matrix[0], det), tags=tag)
             it += 1
             for row in range(1, len(matrix)):
                 table.insert(parent='', index=it, values=("", matrix[row], ""), tags=tag)
@@ -45,43 +28,41 @@ def Gauss_e():
                     tag = 'odd'
                 else:
                     tag = 'even'
-            return it ,tag
+            return it, tag
 
-
-        def partial_pivot_gauss_elimination(matrix):
-            n = len(matrix)
+        def get_As(matrix):
+            # Calculate determinant of original matrix
+            As = []
+            B = [matrix[0][3], matrix[1][3], matrix[2][3]]
             global it
             global tag
-            it, tag = display_matrix(matrix, "Original Matrix", it=it, tag=tag)
+            matrix = np.delete(matrix, 3, 1)
+            det_A = np.linalg.det(matrix)
+            As.append(det_A)
+            it, tag = display_matrix(matrix, "Original Matrix: A", it=it, tag=tag, det=det_A)
 
-            for i in range(n):
-                # Partial pivoting
-                if Choice == 'Pivot':
-                    max_row = i
-                    for k in range(i + 1, n):
-                        if abs(matrix[k][i]) > abs(matrix[max_row][i]):
-                            max_row = k
+            # Create matrices A1, A2, A3, and A4 by replacing columns with B
+            A1 = np.copy(matrix)
+            A1[:, 0] = B
 
-                    # Swap rows
-                    if max_row != i:
-                        matrix[i], matrix[max_row] = matrix[max_row], matrix[i]
-                        it, tag = display_matrix(matrix, f"After Pivoting Row {i + 1} and {max_row + 1}",
-                                                 it=it, tag=tag)
+            A2 = np.copy(matrix)
+            A2[:, 1] = B
 
-                # Gaussian elimination
-                for j in range(i + 1, n):
-                    factor = matrix[j][i] / matrix[i][i]
-                    for k in range(i, n + 1):
-                        matrix[j][k] -= factor * matrix[i][k]
-                        matrix[j][k] = round(matrix[j][k], 3)
-                    it, tag = display_matrix(matrix, f"After Eliminating Row {j + 1} using Row {i + 1}", factor,
-                                             it, tag)
+            A3 = np.copy(matrix)
+            A3[:, 2] = B
 
-            # Back substitution (omitted for simplicity)
+            # Calculate determinants of A1, A2, A3, and A4
+            As.append(np.linalg.det(A1))
+            As.append(np.linalg.det(A2))
+            As.append(np.linalg.det(A3))
 
-            # Return final matrix
-            return matrix
+            # Display matrices with calculated determinants (optional)
+            # ... (use display_matrix function for each matrix with its determinant)
 
+            it, tag = display_matrix(A1, "Matrix: A_1", it=it, tag=tag, det=As[1])
+            it, tag = display_matrix(A2, "Matrix: A_2", it=it, tag=tag, det=As[2])
+            it, tag = display_matrix(A3, "Matrix: A_3", it=it, tag=tag, det=As[3])
+            return As
 
         def solve():
             global tag
@@ -90,13 +71,10 @@ def Gauss_e():
             for i in range(rows):
                 matrix.append([float(entry_grid[i][j].get()) for j in range(columns)])
 
-            result_matrix = partial_pivot_gauss_elimination(matrix)
+            As = get_As(matrix)
+            x = [As[1] / As[0], As[2] / As[0], As[3] / As[0]]
 
-            # Display result (modify to handle different cases)
-            it, tag = display_matrix(result_matrix, "Final Matrix:", it=it, tag=tag)
-
-            x = back_substitution(result_matrix)
-            solution_text=""
+            solution_text = ""
             for i in range(rows):
                 solution_text += f"x{i + 1} = {x[i]:.2f}\n"
             messagebox.showinfo("Solution", solution_text)
@@ -108,13 +86,11 @@ def Gauss_e():
 
             # ... rest of the code for window creation, entry grid, solve button ...
 
-
         # ... (rest of your code for window creation, entry grid, solve button, etc.) ...
-
 
         # Create tkinter window
         window = CTk()
-        window.title("Partial Pivoting Gaussian Elimination")
+        window.title("Solve system using Cramer's rule")
 
         # Create grid for entering matrix
 
@@ -142,14 +118,14 @@ def Gauss_e():
         # Labels to display result
         result_label_grid = []
 
-        table = ttk.Treeview(window, columns=('Title', 'Row', 'Factor'),
+        table = ttk.Treeview(window, columns=('Title', 'Row', 'Det'),
                              show='headings', selectmode="extended")
         table.heading('Title', text='Title')
         table.column("Title", minwidth=0, width=80)
         table.heading('Row', text='Row')
         table.column("Row", minwidth=0, width=80)
-        table.heading('Factor', text='Factor')
-        table.column("Factor", minwidth=0, width=80)
+        table.heading('Det', text='Det')
+        table.column("Det", minwidth=0, width=80)
         table.tag_configure('even', background='#4f4e4e')
         table.tag_configure('odd', background='#858585')
 
@@ -157,19 +133,12 @@ def Gauss_e():
 
         window.mainloop()
 
-
     def enter():
         global rows
         global columns
         rows = int(rows_entry.get())
         columns = int(columns_entry.get())
-        gauss_e()
-
-
-    CTkLabel(row_column_select, text="Choose a method", anchor='w').pack(side='top')
-    combo = CTkComboBox(master=row_column_select, values=['Standard', 'Pivot'], command=Choose_method).pack(side='top',
-                                                                                                            ipadx=22,
-                                                                                                            pady=5)
+        cramer()
 
     CTkLabel(row_column_select, text="Rows", anchor='w').pack(side='left')
     text_r = tk.StringVar()
@@ -186,3 +155,4 @@ def Gauss_e():
                        hover_color="#5c5b5b", border_color='#ffffff', border_width=2, command=enter)
     submit.pack(side="bottom")
     row_column_select.mainloop()
+

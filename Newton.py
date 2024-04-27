@@ -1,14 +1,9 @@
-import numpy
 from customtkinter import *
-import random
-import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import  ttk
 from sympy import *
-from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-import re
 from utils import transform_expression
 
 def newton_method():
@@ -72,13 +67,12 @@ def newton_method():
             x_i = x_iPlus1
         # scatter = plt.scatter(x_i, f_x.subs(x, x_i), color='red', zorder=2)
         # scatter = plt.scatter(x_i, fd_x.subs(x, x_i), color='blue', zorder=2)
-        print(floor(x_i_min), " ", ceiling(x_i_max))
         xx = np.linspace(float(x_i_min), float(x_i_max), 120)
         plt.plot(xx, [f_x.subs(x, i) for i in xx])
         plt.plot(xx, [fd_x.subs(x, i) for i in xx])
 
     root = CTk()
-    root.title("Root Finder")
+    root.title("Newton Method")
     frame3 = CTkFrame(root)
     frame3.pack(fill='x')
     CTkLabel(frame3, text="Initial Value (x_o):", anchor='w').pack(side='left')

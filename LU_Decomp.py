@@ -1,14 +1,7 @@
 from customtkinter import *
-import random
 import tkinter as tk
 from tkinter import messagebox, ttk
-from sympy import *
-from PIL import Image, ImageTk
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-import re
-from utils import transform_expression
 
 it = 0
 tag = 'even'
@@ -81,7 +74,6 @@ def LU_Decomp():
                         it, tag = display_matrix(matrix, f"After Pivoting Row {i + 1} and {max_row + 1}", it=it, tag=tag)
                         swap += str(i)
                         swap += str(max_row)
-                        print(swap)
 
                 # Gaussian elimination
                 for j in range(i + 1, n):
@@ -138,7 +130,7 @@ def LU_Decomp():
                 for j in range(i):
                     sum += L[i][j] * C[j]
                 C[i] = B[i] - sum
-                print(C[i])
+
 
             # Solve for solution vector X (U * X = C)
             X = np.zeros(n)  # Initialize X vector
@@ -149,7 +141,7 @@ def LU_Decomp():
                 for j in range(i + 1, n):
                     sum += U[i][j] * X[j]
                 X[i] = (C[i] - sum) / U[i][i]
-                print(X[i])
+
             # Display solution (X vector)
             solution_text = ""
             for i in range(rows):

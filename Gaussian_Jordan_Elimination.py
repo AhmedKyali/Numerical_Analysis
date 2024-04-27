@@ -1,14 +1,6 @@
 from customtkinter import *
-import random
 import tkinter as tk
 from tkinter import messagebox, ttk
-from sympy import *
-from PIL import Image, ImageTk
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
-import re
-from utils import transform_expression
 
 it = 0
 tag = 'even'
@@ -20,7 +12,7 @@ def Gauss_j_e():
     row_column_select.title("Enter Rows and Columns")
     rows = 3
     columns = 4
-    Choice = 'Standard'
+
     def Choose_method(choice):
         global Choice
         Choice = choice
@@ -65,8 +57,8 @@ def Gauss_j_e():
 
             # Gaussian Jordan Elimination with Partial Pivoting
             for i in range(n):
+                print(Choice)
                 if Choice == 'Pivot':
-                    # Find row with largest absolute value in the current column (below the diagonal)
                     max_row = i
                     for k in range(i + 1, n):
                         if abs(matrix[k][i]) > abs(matrix[max_row][i]):

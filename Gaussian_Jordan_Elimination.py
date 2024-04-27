@@ -6,7 +6,6 @@ it = 0
 tag = 'even'
 
 def Gauss_j_e():
-
     tag = 'even'
     row_column_select = CTk()
     row_column_select.title("Enter Rows and Columns")

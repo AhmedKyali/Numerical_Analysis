@@ -15,24 +15,16 @@ This project is a college assignment focused on numerical analysis, where variou
 
 1. **Root Finding Methods**
    - Bisection Method
-   - Newton-Raphson Method
+   - Newton Method
    - Secant Method
+   - False Position
+   - Simple Fixed Point
 
-2. **Interpolation and Polynomial Approximation**
-   - Lagrange Interpolation
-   - Newton's Divided Differences
-
-3. **Numerical Integration**
-   - Trapezoidal Rule
-   - Simpson's Rule
-
-4. **Linear Algebraic Equations**
+2. **Linear Algebraic Equations**
    - Gaussian Elimination
+   - Gaussian Jordan Elimination
    - LU Decomposition
-
-5. **Ordinary Differential Equations (ODEs)**
-   - Euler's Method
-   - Runge-Kutta Methods
+   - Cramer's Rule
 
 ## Installation
 
@@ -40,6 +32,8 @@ To run this project, you need to have Python installed along with the following 
 
 - NumPy
 - Matplotlib
+- customtkinter
+- tkinter
 
 You can install these libraries using pip:
 
